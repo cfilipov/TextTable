@@ -2,6 +2,12 @@
 
 Easily print ASCII tables in Swift.
 
+## Requirements
+
+This package was written for and tested with the following version of Swift:
+
+> Apple Swift version 3.0 (swiftlang-800.0.41.2 clang-800.0.36)
+
 ## Usage
 
 Import `TextTable`:
