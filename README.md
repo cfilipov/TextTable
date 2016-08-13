@@ -1,10 +1,20 @@
 # TextTable
 
-Easily print textual tables in Swift. Somewhat inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
+Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
 
 Latest Version   | 
 ---------------- |
 [1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0) |
+
+## Features
+
+* Easily generate textual tables from collections of any type
+* Auto-calculates column width
+* Custom width for individual columns
+* Align individual columns
+* Supports per-column [Formatters](https://developer.apple.com/reference/foundation/nsformatter)
+* Multiple table output styles including Markdown, Emacs, HTML, Latex etc...
+* Extensible table formatters allow you to easily create your own table format
 
 ## Requirements
 
@@ -13,6 +23,16 @@ This package was written for and tested with the following version of Swift:
 > Apple Swift version 3.0 (swiftlang-800.0.41.2 clang-800.0.36)
 
 ## Usage
+
+Use the [Swift Package Manager](https://swift.org/package-manager/) to install `TextTable` as a dependency of your project.
+
+```Swift
+dependencies: [
+    .Package(
+        url: "https://github.com/cfilipov/TextTable",
+        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "0"]))
+]
+```
 
 First, import `TextTable`:
 
@@ -108,7 +128,7 @@ For a full list of supported formats see [Supported Formats](#supported-formats)
 
 ### Column-Specific Formatters
 
-You can specify a `Formatter` on a per-column basis. In this example a `DateFormatter` is used to customize the display of the `Birthday` column.
+You can specify a [Formatter](https://developer.apple.com/reference/foundation/nsformatter) on a per-column basis. In this example a `DateFormatter` is used to customize the display of the `Birthday` column.
 
 ```Swift
 let dateFormatter = DateFormatter()
