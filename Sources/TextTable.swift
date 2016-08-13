@@ -8,73 +8,152 @@
 
 import Foundation
 
-public protocol TextTablePrintable {
-    var header: [String] { get }
-    var row: [String] { get }
+public class TextTable<T> {
+    public typealias Builder = (Config<T>) -> Void
+
+    private let config: Config<T>
+
+    public init(_ build: Builder) {
+        let config = Config<T>()
+        build(config)
+        self.config = config
+    }
+
+    public func string<C: Collection where C.Iterator.Element == T>(for data: C, format: TextTableFormatter = Format.Simple()) -> String? {
+        var formatter = format
+        if formatter.dynamicType.requiresWidth {
+            var widths = config.columns.map{$0.width ?? 0}
+            for el in data {
+                for (index,column) in config.columns.enumerated() {
+                    let text = column.text(forElement: el)
+                    widths[index] = max(text.characters.count, widths[index])
+                }
+            }
+            for (index,column) in config.columns.enumerated() {
+                if column.width == nil {
+                    if let title = column.title {
+                        column.width = max(title.characters.count, widths[index])
+                    } else {
+                        column.width = widths[index]
+                    }
+                }
+            }
+        }
+        formatter.beginTable()
+        if config.headerEnabled {
+            formatter.beginHeaderRow()
+            for column in config.columns {
+                formatter.width = column.width
+                formatter.alignment = column.alignment
+                formatter.beginHeaderColumn()
+                if let title = column.title {
+                    formatter.content(title)
+                }
+                formatter.endHeaderColumn()
+            }
+            formatter.endHeaderRow()
+        }
+        for el in data {
+            formatter.beginRow()
+            for column in config.columns {
+                formatter.width = column.width
+                formatter.alignment = column.alignment
+                formatter.beginColumn()
+                formatter.content(column.text(forElement: el))
+                formatter.endColumn()
+            }
+            formatter.endRow()
+        }
+        formatter.endTable()
+        return formatter.string
+    }
+
+    func print<C: Collection where C.Iterator.Element == T>(_ data: C, format: TextTableFormatter = Format.Simple()) {
+        if let string = string(for: data, format: format) {
+            Swift.print(string)
+        }
+    }
 }
 
-// https://github.com/coryalder/SwiftLeftpad
-extension String {
-    private func leftpad(length: Int, character: Character = " ") -> String {
-        var outString: String = self
-        let extraLength = length - outString.characters.count
-        var i = 0
-        while (i < extraLength) {
-            outString.insert(character, at: outString.startIndex)
-            i += 1
+public enum Format {}
+
+public protocol TextTableFormatter {
+    static var requiresWidth: Bool { get }
+
+    var string: String { get }
+    var width: Int? { get set }
+    var alignment: Alignment? { get set }
+
+    func beginTable()
+    func endTable()
+    func beginHeaderRow()
+    func endHeaderRow()
+    func beginRow()
+    func endRow()
+    func beginHeaderColumn()
+    func endHeaderColumn()
+    func beginColumn()
+    func endColumn()
+    func content(_ s: String)
+}
+
+public enum Alignment: String {
+    case left = "left"
+    case right = "right"
+    case center = "center"
+}
+
+public class Column<T> {
+    public typealias Value = (T) -> Any
+
+    private var title: String? = nil
+    private var alignment: Alignment = .right
+    private var width: Int? = nil
+    private var formatter: Formatter? = nil
+    private var value: Value
+
+    public init(_ value: Value) {
+        self.value = value
+    }
+
+    private func text(forElement el: T) -> String {
+        let s = value(el)
+        guard let obj = s as? AnyObject else {
+            return "\(s)"
         }
-        return outString
+        guard let text = formatter?.string(for: obj) else {
+            return "\(s)"
+        }
+        return text
+    }
+
+    @discardableResult public func align(_ alignment: Alignment) -> Column {
+        self.alignment = alignment
+        return self
+    }
+
+    @discardableResult public func width(_ width: Int) -> Column {
+        self.width = width
+        return self
+    }
+
+    @discardableResult public func formatter(_ formatter: Formatter) -> Column {
+        self.formatter = formatter
+        return self
     }
 }
 
-// https://gist.github.com/JadenGeller/ca466c6ccc96a92ca5c5
-extension Sequence {
-    private func reduce(combine: @noescape (Iterator.Element, Iterator.Element) throws -> Iterator.Element) rethrows -> Iterator.Element? {
-        var iterator = makeIterator()
-        guard var result = iterator.next() else { return nil }
-        while let element = iterator.next() {
-            result = try combine(result, element)
-        }
-        return result
-    }
-}
+public class Config<T> {
+    private var columns: [Column<T>] = []
+    private var headerEnabled: Bool = true
 
-public func print<T: Collection where T.Iterator.Element: TextTablePrintable>(table: T) {
-    func maxWidths(_ a: [Int], _ b: [Int]) -> [Int] {
-        precondition(a.count == b.count)
-        return zip(a,b).map(max)
-    }
-    func width(_ s: String) -> Int {
-        return Int(s.characters.count)
-    }
-    func pad(_ s: String, _ len: Int) -> String {
-        return s.leftpad(
-            length: len,
-            character: " ")
-    }
-    func print(row: [String], widths: [Int], separator: String) {
-        precondition(row.count == widths.count)
-        Swift.print(zip(row, widths)
-            .map(pad)
-            .joined(separator: separator))
-    }
-    func maxWidths(_ data: T) -> [Int] {
-        return data.lazy
-            .map{$0.row.map(width)}
-            .reduce(combine: maxWidths)!
-    }
-    func repeated(_ s: Character) -> (Int) -> String {
-        return { count in
-            String(repeating: s, count: count)
+    @discardableResult public func column(_ title: String, _ value: Column<T>.Value) -> Column<T> {
+        let column = Column<T>(value)
+        column.title = title
+        if columns.isEmpty {
+            column.alignment = .left
         }
-    }
-
-    let header = table.first!.header
-    let widths = maxWidths(maxWidths(table), header.map(width))
-    let headerSep = widths.map(repeated("-"))
-    print(row: header, widths: widths, separator: " | ")
-    print(row: headerSep, widths: widths, separator: "-+-")
-    for element in table {
-        print(row: element.row, widths: widths, separator: " | ")
+        columns.append(column)
+        return column
     }
 }
