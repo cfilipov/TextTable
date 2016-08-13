@@ -4,7 +4,7 @@ Easily print textual tables in Swift. Somewhat inspired by the Python [tabulate]
 
 Latest Version   | 
 ---------------- |
-[1.0.0-alpha.0](https://github.com/cfilipov/MuscleBook/releases/tag/v0.1.1) |
+[1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0) |
 
 ## Requirements
 
@@ -104,7 +104,7 @@ The format can also be specified with the `string(for:)` method.
 let s = table.string(for: data, format: Format.Plain())
 ```
 
-For a full list of supported formats see [Supported Formats](#Supported%20Formats) below.
+For a full list of supported formats see [Supported Formats](#supported-formats) below.
 
 ### Column-Specific Formatters
 
