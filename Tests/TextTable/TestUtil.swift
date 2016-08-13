@@ -29,6 +29,8 @@ internal let dateFormatter: DateFormatter = {
 internal let table = TextTable<Person> { t in
     t.column("Name") { $0.name }
     t.column("Age") { $0.age }
+        .width(6)
+        .align(.center)
     t.column("Birthday") { $0.birhtday }
         .formatter(dateFormatter)
 }

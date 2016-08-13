@@ -4,7 +4,7 @@ Easily print textual tables in Swift. Inspired by the Python [tabulate](https://
 
 Latest Version   | 
 ---------------- |
-[1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0) |
+[1.0.0-alpha.1](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.1) |
 
 ## Features
 
@@ -128,7 +128,7 @@ For a full list of supported formats see [Supported Formats](#supported-formats)
 
 ### Column-Specific Formatters
 
-You can specify a [Formatter](https://developer.apple.com/reference/foundation/nsformatter) on a per-column basis. In this example a `DateFormatter` is used to customize the display of the `Birthday` column.
+You can specify a [Formatter](https://developer.apple.com/reference/foundation/nsformatter) on a per-column basis. In this example a [DateFormatter](https://developer.apple.com/reference/foundation/nsdateformatter) is used to customize the display of the `Birthday` column.
 
 ```Swift
 let dateFormatter = DateFormatter()
@@ -216,7 +216,6 @@ TextTable supports most of the formats as [tabulate](https://pypi.python.org/pyp
 ### Plain
 
 ```
-> table.print(data) // or..
 > table.print(data, format: Format.Plain())
 
 Name  Age Birthday
@@ -230,6 +229,7 @@ Eve   142  8/13/16
 `Simple` is the default format. It corresponds to `simple_tables` in [Pandoc](http://pandoc.org/) Markdown extensions.
 
 ```
+> table.print(data) // or..
 > table.print(data, format: Format.Simple())
 
 Name  Age Birthday

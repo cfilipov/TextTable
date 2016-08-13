@@ -14,11 +14,15 @@ extension Format {
 
         public var string: String = ""
         public var width: Int? = nil
-        public var alignment: Alignment? = nil
-        public var row: Int = 0
+        public var align: Alignment = .left
 
+        private var row: Int = 0
         private var contentStack: [String] = []
 
+        public static func escape(_ s: String) -> String {
+            return s
+        }
+        
         public func beginTable() { }
 
         public func endTable() {
@@ -79,15 +83,8 @@ extension Format {
         public func endColumn() { }
 
         public func content(_ s: String) {
-            let pad: PaddingFunction
-            switch alignment {
-            case .some(.left): pad = s.rightpad
-            case .some(.right): pad = s.leftpad
-            case .some(.center): fatalError()
-            case .none: pad = s.leftpad
-            }
             if let width = width {
-                contentStack.append(pad(length: width, character: " "))
+                contentStack.append(s.pad(align, length: width))
             } else {
                 contentStack.append(s)
             }

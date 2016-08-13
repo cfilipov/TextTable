@@ -14,7 +14,14 @@ extension Format {
 
         public var string: String = ""
         public var width: Int? = nil
-        public var alignment: Alignment? = nil
+        public var align: Alignment = .left
+
+        public static func escape(_ s: String) -> String {
+            return s
+                .replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of: "<", with: "&gt;")
+        }
 
         public func beginTable() {
             string.append("<table>\n")
@@ -43,14 +50,10 @@ extension Format {
         public func beginHeaderColumn() {
             string.append("<")
             string.append("th")
-            if alignment != nil || width != nil {
-                string.append(" ")
-                string.append("style=\"")
-                if let alignment = alignment {
-                    string.append("text-align:\(alignment.rawValue);")
-                }
-                string.append("\"")
-            }
+            string.append(" ")
+            string.append("style=\"")
+            string.append("text-align:\(align.rawValue);")
+            string.append("\"")
             string.append(">")
         }
 

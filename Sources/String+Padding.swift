@@ -31,11 +31,27 @@ internal extension String {
         return padding(toLength: length, withPad: String(character), startingAt: 0)
     }
 
+    internal func centerpad(length: Int, character: Character = " ") -> String {
+        let count = characters.count
+        let leftlen = (length - count)/2 + count
+        return leftpad(length: leftlen).rightpad(length: length)
+    }
+
     internal func replaceAll(_ character: Character) -> String {
         var out = ""
         for _ in characters {
             out.append(character)
         }
         return out
+    }
+
+    internal func pad(_ align: Alignment, length: Int) -> String {
+        let padfunc: PaddingFunction
+        switch align {
+        case .left: padfunc = rightpad
+        case .right: padfunc = leftpad
+        case .center: padfunc = centerpad
+        }
+        return padfunc(length: length, character: " ")
     }
 }

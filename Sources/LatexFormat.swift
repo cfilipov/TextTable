@@ -14,10 +14,24 @@ extension Format {
 
         public var string: String = ""
         public var width: Int? = nil
-        public var alignment: Alignment? = nil
+        public var align: Alignment = .left
 
         private var contentStack: [String] = []
 
+        public static func escape(_ s: String) -> String {
+            return s
+                .replacingOccurrences(of: "#", with: "\\#")
+                .replacingOccurrences(of: "$", with: "\\$")
+                .replacingOccurrences(of: "%", with: "\\%")
+                .replacingOccurrences(of: "&", with: "\\&")
+                .replacingOccurrences(of: "\\", with: "\\textbackslash{}")
+                .replacingOccurrences(of: "^", with: "\\textasciicircum{}")
+                .replacingOccurrences(of: "_", with: "\\_")
+                .replacingOccurrences(of: "{", with: "\\{")
+                .replacingOccurrences(of: "}", with: "\\}")
+                .replacingOccurrences(of: "~", with: "\\textasciitilde{}")
+        }
+        
         public func beginTable() {
             string.append("\\begin{tabular}{lr}\n")
         }
@@ -54,18 +68,7 @@ extension Format {
         public func endColumn() { }
 
         public func content(_ s: String) {
-            let pad: PaddingFunction
-            switch alignment {
-            case .some(.left): pad = s.rightpad
-            case .some(.right): pad = s.leftpad
-            case .some(.center): fatalError()
-            case .none: pad = s.leftpad
-            }
-            if let width = width {
-                contentStack.append(pad(length: width, character: " "))
-            } else {
-                contentStack.append(s)
-            }
+            contentStack.append(s)
         }
     }
 }

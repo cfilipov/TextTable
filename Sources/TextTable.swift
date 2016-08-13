@@ -19,32 +19,41 @@ public class TextTable<T> {
         self.config = config
     }
 
-    public func string<C: Collection where C.Iterator.Element == T>(for data: C, format: TextTableFormatter = Format.Simple()) -> String? {
-        var formatter = format
-        if formatter.dynamicType.requiresWidth {
-            var widths = config.columns.map{$0.width ?? 0}
-            for el in data {
-                for (index,column) in config.columns.enumerated() {
-                    let text = column.text(forElement: el)
-                    widths[index] = max(text.characters.count, widths[index])
-                }
-            }
+    private func widths<C: Collection where C.Iterator.Element == T>(for data: C, columns: [Column<T>], format: TextTableFormatter) -> [Int?] {
+        guard format.dynamicType.requiresWidth else {
+            return columns.map{$0.width}
+        }
+        // If lll columns have explicitely set width, skip calculation
+        let missingWidths = columns.filter{($0.width == nil)}.count
+        guard missingWidths > 0 else {
+            return columns.map{$0.width}
+        }
+        var calculatedWidths = config.columns.map{$0.width ?? 0}
+        for el in data {
             for (index,column) in config.columns.enumerated() {
-                if column.width == nil {
-                    if let title = column.title {
-                        column.width = max(title.characters.count, widths[index])
-                    } else {
-                        column.width = widths[index]
-                    }
+                let text = column.text(forElement: el, format: format)
+                calculatedWidths[index] = max(text.characters.count, calculatedWidths[index])
+            }
+        }
+        for (index,column) in config.columns.enumerated() {
+            if column.width == nil {
+                if let title = column.title {
+                    calculatedWidths[index] = max(title.characters.count, calculatedWidths[index])
                 }
             }
         }
+        return calculatedWidths.map(Optional.some)
+    }
+
+    public func string<C: Collection where C.Iterator.Element == T>(for data: C, format: TextTableFormatter = Format.Simple()) -> String? {
+        var formatter = format
+        let widths = self.widths(for: data, columns: config.columns, format: format)
         formatter.beginTable()
         if config.headerEnabled {
             formatter.beginHeaderRow()
-            for column in config.columns {
-                formatter.width = column.width
-                formatter.alignment = column.alignment
+            for (index, column) in config.columns.enumerated() {
+                formatter.width = column.width ?? widths[index]
+                formatter.align = column.alignment
                 formatter.beginHeaderColumn()
                 if let title = column.title {
                     formatter.content(title)
@@ -55,11 +64,11 @@ public class TextTable<T> {
         }
         for el in data {
             formatter.beginRow()
-            for column in config.columns {
-                formatter.width = column.width
-                formatter.alignment = column.alignment
+            for (index, column) in config.columns.enumerated() {
+                formatter.width = column.width ?? widths[index]
+                formatter.align = column.alignment
                 formatter.beginColumn()
-                formatter.content(column.text(forElement: el))
+                formatter.content(column.text(forElement: el, format: formatter))
                 formatter.endColumn()
             }
             formatter.endRow()
@@ -82,7 +91,9 @@ public protocol TextTableFormatter {
 
     var string: String { get }
     var width: Int? { get set }
-    var alignment: Alignment? { get set }
+    var align: Alignment { get set }
+
+    static func escape(_ s: String) -> String
 
     func beginTable()
     func endTable()
@@ -116,15 +127,15 @@ public class Column<T> {
         self.value = value
     }
 
-    private func text(forElement el: T) -> String {
+    private func text(forElement el: T, format tableFormatter: TextTableFormatter) -> String {
         let s = value(el)
         guard let obj = s as? AnyObject else {
-            return "\(s)"
+            return tableFormatter.dynamicType.escape("\(s)")
         }
         guard let text = formatter?.string(for: obj) else {
-            return "\(s)"
+            return tableFormatter.dynamicType.escape("\(s)")
         }
-        return text
+        return tableFormatter.dynamicType.escape(text)
     }
 
     @discardableResult public func align(_ alignment: Alignment) -> Column {

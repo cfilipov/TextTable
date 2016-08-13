@@ -21,13 +21,13 @@ class RstFormatTests: XCTestCase {
 
     func testTable() {
         let expectedOutput = "" +
-            "===== === ========\n" +
-            "Name  Age Birthday\n" +
-            "===== === ========\n" +
-            "Alice  42  8/13/16\n" +
-            "Bob    22  8/13/16\n" +
-            "Eve   142  8/13/16\n" +
-            "===== === ========\n" +
+            "===== ====== ========\n" +
+            "Name   Age   Birthday\n" +
+            "===== ====== ========\n" +
+            "Alice   42    8/13/16\n" +
+            "Bob     22    8/13/16\n" +
+            "Eve    142    8/13/16\n" +
+            "===== ====== ========\n" +
         ""
         let s = table.string(for: data, format: TestFormat())!
         XCTAssertEqual(s, expectedOutput)

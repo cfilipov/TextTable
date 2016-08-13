@@ -14,12 +14,16 @@ extension Format {
 
         public var string: String = ""
         public var width: Int? = nil
-        public var alignment: Alignment? = nil
+        public var align: Alignment = .left
 
         private var isHeader: Bool = false
         private var contentStack: [String] = []
         private var headerStack: [String] = []
 
+        public static func escape(_ s: String) -> String {
+            return s
+        }
+        
         public func beginTable() { }
         public func endTable() { }
 
@@ -58,24 +62,16 @@ extension Format {
         public func endColumn() { }
 
         public func content(_ s: String) {
-            let pad: PaddingFunction
-            switch alignment {
-            case .some(.left): pad = s.rightpad
-            case .some(.right): pad = s.leftpad
-            case .some(.center): fatalError()
-            case .none: pad = s.leftpad
-            }
             let w = max(width!, 3)
-            contentStack.append(pad(length: w, character: " "))
+            contentStack.append(s.pad(align, length: w))
             if isHeader {
-                switch alignment {
-                case .some(.left):
+                switch align {
+                case .left:
                     headerStack.append(":" + String(repeating: Character("-"), count: w+1))
-                case .some(.right):
+                case .right:
                     headerStack.append(String(repeating: Character("-"), count: w+1) + ":")
-                case .some(.center):
-                    headerStack.append(":" + String(repeating: Character("-"), count: w-2) + ":")
-                case .none: fatalError()
+                case .center:
+                    headerStack.append(":" + String(repeating: Character("-"), count: w) + ":")
                 }
             }
         }

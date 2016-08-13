@@ -22,7 +22,7 @@ class HtmlFormatTests: XCTestCase {
     func testTable() {
         let expectedOutput = "" +
             "<table>\n" +
-            "<tr><th style=\"text-align:left;\">Name</th><th style=\"text-align:right;\">Age</th><th style=\"text-align:right;\">Birthday</th></tr>\n" +
+            "<tr><th style=\"text-align:left;\">Name</th><th style=\"text-align:center;\">Age</th><th style=\"text-align:right;\">Birthday</th></tr>\n" +
             "<tr><td>Alice</td><td>42</td><td>8/13/16</td></tr>\n" +
             "<tr><td>Bob</td><td>22</td><td>8/13/16</td></tr>\n" +
             "<tr><td>Eve</td><td>142</td><td>8/13/16</td></tr>\n" +
