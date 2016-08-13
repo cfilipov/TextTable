@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.0.0-alpha.0](https://github.com/cfilipov/MuscleBook/releases/tag/v1.0.0-alpha.0)
+## [1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0)
 
 * Breaking change: completely re-written API. No more conforming to a protocol, instead a `TextTable` class is used in similar to `NSFormatter`. This offers much more flexibility.
 * Many more output formats. Similar to what you get from Python's [tabulate](https://pypi.python.org/pypi/tabulate) lib.
