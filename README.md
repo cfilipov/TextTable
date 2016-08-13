@@ -30,7 +30,7 @@ Use the [Swift Package Manager](https://swift.org/package-manager/) to install `
 dependencies: [
     .Package(
         url: "https://github.com/cfilipov/TextTable",
-        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "0"]))
+        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "1"]))
 ]
 ```
 
