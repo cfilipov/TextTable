@@ -372,6 +372,12 @@ You can create a custom table format by conforming to the `TextTableFormatter` p
 
 A list of changes can be found in the [CHANGELOG](CHANGELOG.md).
 
+## Alternatives
+
+Other Swift libraries that serve a similar purpose.
+
+* [SwiftyTextTable](https://github.com/scottrhoyt/SwiftyTextTable)
+
 ## License
 
 MIT License
