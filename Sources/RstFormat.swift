@@ -9,7 +9,7 @@
 import Foundation
 
 extension Format {
-    public class Rst: TextTableFormatter {
+    public final class Rst: TextTableFormatter {
         public static var requiresWidth: Bool { return true }
 
         public var string: String = ""

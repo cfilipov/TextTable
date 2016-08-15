@@ -9,7 +9,7 @@
 import Foundation
 
 extension Format {
-    public class Latex: TextTableFormatter {
+    public final class Latex: TextTableFormatter {
         public static var requiresWidth: Bool { return false }
 
         public var string: String = ""
@@ -30,6 +30,8 @@ extension Format {
                 .replacingOccurrences(of: "{", with: "\\{")
                 .replacingOccurrences(of: "}", with: "\\}")
                 .replacingOccurrences(of: "~", with: "\\textasciitilde{}")
+                // not strictly necessary, but makes for nicer output
+                .replacingOccurrences(of: "…", with: "\\ldots ")
         }
         
         public func beginTable() {

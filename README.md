@@ -4,7 +4,7 @@ Easily print textual tables in Swift. Inspired by the Python [tabulate](https://
 
 Latest Version   | 
 ---------------- |
-[1.0.0-alpha.1](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.1) |
+[1.0.0-alpha.2](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.2) |
 
 ## Features
 
@@ -15,6 +15,7 @@ Latest Version   |
 * Supports per-column [Formatters](https://developer.apple.com/reference/foundation/nsformatter)
 * Multiple table output styles including Markdown, Emacs, HTML, Latex etc...
 * Extensible table formatters allow you to easily create your own table format
+* Column-specific truncation modes (truncate head or tail of column content or optionally fail if content overflows).
 
 ## Requirements
 
@@ -30,7 +31,7 @@ Use the [Swift Package Manager](https://swift.org/package-manager/) to install `
 dependencies: [
     .Package(
         url: "https://github.com/cfilipov/TextTable",
-        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "1"]))
+        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "2"]))
 ]
 ```
 
@@ -43,7 +44,7 @@ import TextTable
 Throughout the examples, the following data structure will be used:
 
 ```Swift
-private struct Person {
+struct Person {
     let name: String
     let age: Int
     let birhtday: Date
@@ -134,7 +135,7 @@ You can specify a [Formatter](https://developer.apple.com/reference/foundation/n
 let dateFormatter = DateFormatter()
 dateFormatter.dateStyle = .medium
 
-private let table = TextTable<Person> { t in
+let table = TextTable<Person> { t in
     t.column("Name") { $0.name }
     t.column("Age") { $0.age }
     t.column("Birthday") { $0.birhtday }

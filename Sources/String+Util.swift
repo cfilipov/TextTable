@@ -54,4 +54,18 @@ internal extension String {
         }
         return padfunc(length: length, character: " ")
     }
+
+    internal func truncated(_ mode: Truncation, length: Int) -> String {
+        switch mode {
+        case .tail:
+            guard characters.count > length else { return self }
+            return substring(to: index(startIndex, offsetBy: length-1)) + "…"
+        case .head:
+            guard characters.count > length else { return self }
+            return "…" + substring(from: index(endIndex, offsetBy: -1*(length-1)))
+        case .error:
+            guard characters.count <= length else { return self }
+            fatalError("Truncation error")
+        }
+    }
 }

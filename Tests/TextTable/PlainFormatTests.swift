@@ -21,10 +21,10 @@ class PlainFormatTests: XCTestCase {
 
     func testTable() {
         let expectedOutput = "" +
-            "Name   Age   Birthday\n" +
-            "Alice   42    8/13/16\n" +
-            "Bob     22    8/13/16\n" +
-            "Eve    142    8/13/16\n" +
+            "Name   Age   Birthday      Notes      Notes\n" +
+            "Alice   42    8/14/16 Lorem ips… … rhoncus.\n" +
+            "Bob     22    8/14/16 Nunc vari… …enenatis.\n" +
+            "Eve    142    8/14/16 Etiam qui… …ulus mus.\n" +
         ""
         let s = table.string(for: data, format: TestFormat())!
         XCTAssertEqual(s, expectedOutput)

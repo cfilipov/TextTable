@@ -1,5 +1,15 @@
 # Change Log
 
+## [1.0.0-alpha.2](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.2)
+
+* Column truncation support. There is now an optional `truncate:` argument to `width`.
+* Added some documentation.
+
+##### Known Issues in 1.0.0-alpha.2
+
+* Very little effort has but put into performance optimizations.
+* It should be possible to create columns without headers, but this hasn't been tested and likely doesn't work yet.
+
 ## [1.0.0-alpha.1](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.1)
 
 * Support for center alignment.

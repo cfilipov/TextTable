@@ -8,7 +8,42 @@
 
 import Foundation
 
-public class TextTable<T> {
+/**
+ Instances of `TextTable` represent the mapping of a type to a tabular representation. That is, `TextTable` defines how a collection of `T` can be transformed into a set of rows and columns along with the corresponding header titles and other attributes.
+ 
+ A `TextTable` is configured inside the closure of the `init` method. Use the `Config` instance passed to the builder closure to add columns to the `TextTable` configuration.
+ 
+ ## Basic Usage
+ 
+     struct Person {
+         let name: String
+         let age: Int
+         let birhtday: Date
+     }
+
+     let dateFormatter = DateFormatter()
+     dateFormatter.dateStyle = .medium
+
+     let table = TextTable<Person> { t in
+         t.column("Name") { $0.name }
+         t.column("Age") { $0.age }
+             .width(6)
+             .align(.center)
+         t.column("Birthday") { $0.birhtday }
+             .formatter(dateFormatter)
+     }
+ 
+     table.print(data)
+
+ Output:
+
+     Name   Age   Birthday
+     ----- ------ --------
+     Alice   42    8/13/16
+     Bob     22    8/13/16
+     Eve    142    8/13/16
+ */
+public final class TextTable<T> {
     public typealias Builder = (Config<T>) -> Void
 
     private let config: Config<T>
@@ -23,7 +58,7 @@ public class TextTable<T> {
         guard format.dynamicType.requiresWidth else {
             return columns.map{$0.width}
         }
-        // If lll columns have explicitely set width, skip calculation
+        // If all columns have explicitely set width, skip calculation
         let missingWidths = columns.filter{($0.width == nil)}.count
         guard missingWidths > 0 else {
             return columns.map{$0.width}
@@ -31,7 +66,7 @@ public class TextTable<T> {
         var calculatedWidths = config.columns.map{$0.width ?? 0}
         for el in data {
             for (index,column) in config.columns.enumerated() {
-                let text = column.text(forElement: el, format: format)
+                let text = format.text(el, column)
                 calculatedWidths[index] = max(text.characters.count, calculatedWidths[index])
             }
         }
@@ -45,6 +80,14 @@ public class TextTable<T> {
         return calculatedWidths.map(Optional.some)
     }
 
+    /**
+     Returns a `String` formatted as textual representation of a table.
+     
+     Parameters:
+     
+        - for: A collection of some `T`. Each `T` will be used as row.
+        - format: [optional] The format to use when rendering the table. The default is `Format.Simple()`.
+     */
     public func string<C: Collection where C.Iterator.Element == T>(for data: C, format: TextTableFormatter = Format.Simple()) -> String? {
         var formatter = format
         let widths = self.widths(for: data, columns: config.columns, format: format)
@@ -68,7 +111,7 @@ public class TextTable<T> {
                 formatter.width = column.width ?? widths[index]
                 formatter.align = column.alignment
                 formatter.beginColumn()
-                formatter.content(column.text(forElement: el, format: formatter))
+                formatter.content(formatter.text(el, column))
                 formatter.endColumn()
             }
             formatter.endRow()
@@ -114,47 +157,78 @@ public enum Alignment: String {
     case center = "center"
 }
 
-public class Column<T> {
+public enum Truncation {
+    case head
+    case tail
+    case error
+}
+
+private extension TextTableFormatter {
+    private func text<T>(_ element: T, _ column: Column<T>) -> String {
+        return Self.escape(truncated(column.text(element), column))
+    }
+
+    private func truncated<T>(_ text: String, _ column: Column<T>) -> String {
+        guard let width = width else { return text }
+        return text.truncated(column.tuncationMode, length: width)
+    }
+}
+
+/**
+ The column configuration of a `TextTable`. Each `Column` instance maps a type `T` to a specific column.
+ */
+public final class Column<T> {
     public typealias Value = (T) -> Any
 
     private var title: String? = nil
     private var alignment: Alignment = .right
     private var width: Int? = nil
     private var formatter: Formatter? = nil
+    private var tuncationMode: Truncation = .tail
     private var value: Value
 
     public init(_ value: Value) {
         self.value = value
     }
 
-    private func text(forElement el: T, format tableFormatter: TextTableFormatter) -> String {
+    private func text(_ el: T) -> String {
         let s = value(el)
         guard let obj = s as? AnyObject else {
-            return tableFormatter.dynamicType.escape("\(s)")
+            return "\(s)"
         }
         guard let text = formatter?.string(for: obj) else {
-            return tableFormatter.dynamicType.escape("\(s)")
+            return "\(s)"
         }
-        return tableFormatter.dynamicType.escape(text)
+        return text
     }
 
+    /**
+     Sets the alignment of the column.
+     */
     @discardableResult public func align(_ alignment: Alignment) -> Column {
         self.alignment = alignment
         return self
     }
 
-    @discardableResult public func width(_ width: Int) -> Column {
+    /**
+     Sets the width of the column.
+     */
+    @discardableResult public func width(_ width: Int, truncate: Truncation = .tail) -> Column {
         self.width = width
+        self.tuncationMode = truncate
         return self
     }
 
+    /**
+     Sets a `Formatter` to use for formatting the text content of the column.
+     */
     @discardableResult public func formatter(_ formatter: Formatter) -> Column {
         self.formatter = formatter
         return self
     }
 }
 
-public class Config<T> {
+public final class Config<T> {
     private var columns: [Column<T>] = []
     private var headerEnabled: Bool = true
 

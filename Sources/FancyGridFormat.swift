@@ -9,7 +9,7 @@
 import Foundation
 
 extension Format {
-    public class FancyGrid: TextTableFormatter {
+    public final class FancyGrid: TextTableFormatter {
         public static var requiresWidth: Bool { return true }
 
         public var string: String = ""

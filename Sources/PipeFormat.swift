@@ -9,7 +9,7 @@
 import Foundation
 
 extension Format {
-    public class Pipe: TextTableFormatter {
+    public final class Pipe: TextTableFormatter {
         public static var requiresWidth: Bool { return true }
 
         public var string: String = ""

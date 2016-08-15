@@ -23,11 +23,10 @@ class LatexFormatTests: XCTestCase {
         let expectedOutput = "" +
             "\\begin{tabular}{lr}\n" +
             "\\hline\n" +
-            " Name & Age & Birthday \\\\\n" +
-            "\\hline\n" +
-            " Alice & 42 & 8/13/16 \\\\\n" +
-            " Bob & 22 & 8/13/16 \\\\\n" +
-            " Eve & 142 & 8/13/16 \\\\\n" +
+            " Name & Age & Birthday & Notes & Notes \\\\\n" +
+            "\\hline\n Alice & 42 & 8/14/16 & Lorem ips\\ldots  & \\ldots  rhoncus. \\\\\n" +
+            " Bob & 22 & 8/14/16 & Nunc vari\\ldots  & \\ldots enenatis. \\\\\n" +
+            " Eve & 142 & 8/14/16 & Etiam qui\\ldots  & \\ldots ulus mus. \\\\\n" +
             "\\hline\n" +
             "\\end{tabular}\n" +
         ""

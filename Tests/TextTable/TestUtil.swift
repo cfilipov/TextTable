@@ -13,11 +13,12 @@ internal struct Person {
     let name: String
     let age: Int
     let birhtday: Date
+    let notes: String
 }
 
-internal let alice = Person(name: "Alice", age: 42, birhtday: Date())
-internal let bob = Person(name: "Bob", age: 22, birhtday: Date())
-internal let eve = Person(name: "Eve", age: 142, birhtday: Date())
+internal let alice = Person(name: "Alice", age: 42, birhtday: Date(), notes: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices a orci quis rhoncus.")
+internal let bob = Person(name: "Bob", age: 22, birhtday: Date(), notes: "Nunc varius lectus eget feugiat euismod. Mauris tincidunt turpis a augue varius, bibendum cursus elit venenatis.")
+internal let eve = Person(name: "Eve", age: 142, birhtday: Date(), notes: "Etiam quis lectus vestibulum, cursus lectus at, consectetur enim. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.")
 internal let data = [alice, bob, eve]
 
 internal let dateFormatter: DateFormatter = {
@@ -33,4 +34,9 @@ internal let table = TextTable<Person> { t in
         .align(.center)
     t.column("Birthday") { $0.birhtday }
         .formatter(dateFormatter)
+    t.column("Notes") { $0.notes }
+        .width(10)
+    t.column("Notes") { $0.notes }
+        .width(10, truncate: .head)
+    
 }
