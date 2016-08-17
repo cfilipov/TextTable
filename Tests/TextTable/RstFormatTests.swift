@@ -9,13 +9,13 @@
 import XCTest
 @testable import TextTable
 
-private typealias TestFormat = Format.Rst
+private let testStyle = Style.rst
 
 class RstFormatTests: XCTestCase {
 
     func testPerformanceExample() {
         self.measure {
-            let _ = table.string(for: data, format: TestFormat())
+            let _ = table.string(for: data, style: testStyle)
         }
     }
 
@@ -29,7 +29,7 @@ class RstFormatTests: XCTestCase {
             "Eve    142    8/14/16 Etiam qui… …ulus mus.\n" +
             "===== ====== ======== ========== ==========\n" +
         ""
-        let s = table.string(for: data, format: TestFormat())!
+        let s = table.string(for: data, style: testStyle)!
         XCTAssertEqual(s, expectedOutput)
     }
     

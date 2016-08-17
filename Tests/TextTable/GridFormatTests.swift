@@ -9,13 +9,13 @@
 import XCTest
 @testable import TextTable
 
-private typealias TestFormat = Format.Grid
+private let testStyle = Style.grid
 
 class GridFormatTests: XCTestCase {
 
     func testPerformanceExample() {
         self.measure {
-            let _ = table.string(for: data, format: TestFormat())
+            let _ = table.string(for: data, style: testStyle)
         }
     }
 
@@ -30,9 +30,8 @@ class GridFormatTests: XCTestCase {
             "+-------+--------+----------+------------+------------+\n" +
             "| Eve   |  142   |  8/14/16 | Etiam qui… | …ulus mus. |\n" +
             "+-------+--------+----------+------------+------------+\n" +
-            "" +
         ""
-        let s = table.string(for: data, format: TestFormat())!
+        let s = table.string(for: data, style: testStyle)!
         XCTAssertEqual(s, expectedOutput)
     }
     

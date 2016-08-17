@@ -8,69 +8,61 @@
 
 import Foundation
 
-extension Format {
-    public final class Latex: TextTableFormatter {
-        public static var requiresWidth: Bool { return false }
-
-        public var string: String = ""
-        public var width: Int? = nil
-        public var align: Alignment = .left
-
-        private var contentStack: [String] = []
-
-        public static func escape(_ s: String) -> String {
-            return s
-                .replacingOccurrences(of: "#", with: "\\#")
-                .replacingOccurrences(of: "$", with: "\\$")
-                .replacingOccurrences(of: "%", with: "\\%")
-                .replacingOccurrences(of: "&", with: "\\&")
-                .replacingOccurrences(of: "\\", with: "\\textbackslash{}")
-                .replacingOccurrences(of: "^", with: "\\textasciicircum{}")
-                .replacingOccurrences(of: "_", with: "\\_")
-                .replacingOccurrences(of: "{", with: "\\{")
-                .replacingOccurrences(of: "}", with: "\\}")
-                .replacingOccurrences(of: "~", with: "\\textasciitilde{}")
-                // not strictly necessary, but makes for nicer output
-                .replacingOccurrences(of: "…", with: "\\ldots ")
+public enum Latex: TextTableStyle {
+    public static func prepare(_ s: String, for column: Column) -> String {
+        var string = s
+        if let width = column.width {
+            string = string.truncated(column.truncate, length: width)
+            string = string.pad(column.align, length: width)
         }
-        
-        public func beginTable() {
-            string.append("\\begin{tabular}{lr}\n")
-        }
+        return escape(string)
+    }
 
-        public func endTable() {
-            string.append("\\hline\n")
-            string.append("\\end{tabular}\n")
-        }
+    public static func escape(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "#", with: "\\#")
+            .replacingOccurrences(of: "$", with: "\\$")
+            .replacingOccurrences(of: "%", with: "\\%")
+            .replacingOccurrences(of: "&", with: "\\&")
+            .replacingOccurrences(of: "\\", with: "\\textbackslash{}")
+            .replacingOccurrences(of: "^", with: "\\textasciicircum{}")
+            .replacingOccurrences(of: "_", with: "\\_")
+            .replacingOccurrences(of: "{", with: "\\{")
+            .replacingOccurrences(of: "}", with: "\\}")
+            .replacingOccurrences(of: "~", with: "\\textasciitilde{}")
+            // not strictly necessary, but makes for nicer output
+            .replacingOccurrences(of: "…", with: "\\ldots ")
+    }
 
-        public func beginHeaderRow() {
-            string.append("\\hline\n")
+    private static func alignments(_ col: Column) -> String {
+        switch col.align {
+        case .left: return "l"
+        case .right: return "r"
+        case .center: return "c"
         }
+    }
 
-        public func endHeaderRow() {
-            string.append(" ")
-            string.append(contentStack.joined(separator: " & "))
-            string.append(" \\\\\n")
-            string.append("\\hline\n")
-        }
+    public static func begin(_ table: inout String, index: Int, columns: [Column]) {
+        let align = columns.map(alignments).joined(separator: "")
+        table += "\\begin{tabular}{\(align)}\n"
+    }
 
-        public func beginRow() {
-            contentStack.removeAll()
-        }
+    public static func end(_ table: inout String, index: Int, columns: [Column]) {
+        table += "\\hline\n"
+        table += "\\end{tabular}\n"
+    }
 
-        public func endRow() {
-            string.append(" ")
-            string.append(contentStack.joined(separator: " & "))
-            string.append(" \\\\\n")
-        }
+    public static func header(_ table: inout String, index: Int, columns: [Column]) {
+        table += "\\hline\n"
+        table += " "
+        table += columns.map{$0.headerString(for: self)}.joined(separator: " & ")
+        table += " \\\\\n"
+        table += "\\hline\n"
+    }
 
-        public func beginHeaderColumn() { }
-        public func endHeaderColumn() { }
-        public func beginColumn() { }
-        public func endColumn() { }
-
-        public func content(_ s: String) {
-            contentStack.append(s)
-        }
+    public static func row(_ table: inout String, index: Int, columns: [Column]) {
+        table += " "
+        table += columns.map{$0.string(for: self)}.joined(separator: " & ")
+        table += " \\\\\n"
     }
 }

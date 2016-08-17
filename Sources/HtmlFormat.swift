@@ -8,69 +8,60 @@
 
 import Foundation
 
-extension Format {
-    public final class Html: TextTableFormatter {
-        public static var requiresWidth: Bool { return false }
-
-        public var string: String = ""
-        public var width: Int? = nil
-        public var align: Alignment = .left
-
-        public static func escape(_ s: String) -> String {
-            return s
-                .replacingOccurrences(of: "&", with: "&amp;")
-                .replacingOccurrences(of: "<", with: "&lt;")
-                .replacingOccurrences(of: "<", with: "&gt;")
+public enum Html: TextTableStyle {
+    public static func prepare(_ s: String, for column: Column) -> String {
+        var string = s
+        if let width = column.width {
+            string = string.truncated(column.truncate, length: width)
         }
+        return escape(string)
+    }
 
-        public func beginTable() {
-            string.append("<table>\n")
-        }
+    public static func escape(_ s: String) -> String {
+        return s
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: "<", with: "&gt;")
+    }
 
-        public func endTable() {
-            string.append("</table>")
+    private static func string(for alignment: Alignment) -> String {
+        switch alignment {
+        case .left: return "left"
+        case .right: return "right"
+        case .center: return "center"
         }
+    }
 
-        public func beginHeaderRow() {
-            string.append("<tr>")
-        }
+    private static func string(header col: Column) -> String {
+        return "        <th style=\"text-align:\(string(for: col.align));\">" +
+            col.headerString(for: self) + "</th>\n"
+    }
 
-        public func endHeaderRow() {
-            string.append("</tr>\n")
-        }
+    private static func string(row col: Column) -> String {
+        return "        <td>" + col.string(for: self) + "</td>\n"
+    }
 
-        public func beginRow() {
-            string.append("<tr>")
-        }
+    public static func begin(_ table: inout String, index: Int, columns: [Column]) {
+        table += "<table>\n"
+    }
 
-        public func endRow() {
-            string.append("</tr>\n")
-        }
+    public static func end(_ table: inout String, index: Int, columns: [Column]) {
+        table += "</table>\n"
+    }
 
-        public func beginHeaderColumn() {
-            string.append("<")
-            string.append("th")
-            string.append(" ")
-            string.append("style=\"")
-            string.append("text-align:\(align.rawValue);")
-            string.append("\"")
-            string.append(">")
+    public static func header(_ table: inout String, index: Int, columns: [Column]) {
+        table += "    <tr>\n"
+        for col in columns {
+            table += string(header: col)
         }
+        table += "    </tr>\n"
+    }
 
-        public func endHeaderColumn() {
-            string.append("</th>")
+    public static func row(_ table: inout String, index: Int, columns: [Column]) {
+        table += "    <tr>\n"
+        for col in columns {
+            table += string(row: col)
         }
-
-        public func beginColumn() {
-            string.append("<td>")
-        }
-
-        public func endColumn() {
-            string.append("</td>")
-        }
-        
-        public func content(_ s: String) {
-            string.append(s)
-        }
+        table += "    </tr>\n"
     }
 }

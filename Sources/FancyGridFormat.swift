@@ -8,86 +8,55 @@
 
 import Foundation
 
-extension Format {
-    public final class FancyGrid: TextTableFormatter {
-        public static var requiresWidth: Bool { return true }
-
-        public var string: String = ""
-        public var width: Int? = nil
-        public var align: Alignment = .left
-
-        private var row: Int = 0
-        private var contentStack: [String] = []
-
-        public static func escape(_ s: String) -> String {
-            return s
+public enum FancyGrid: TextTableStyle {
+    public static func prepare(_ s: String, for column: Column) -> String {
+        var string = s
+        if let width = column.width {
+            string = string.truncated(column.truncate, length: width)
+            string = string.pad(column.align, length: width)
         }
-        
-        public func beginTable() { }
+        return escape(string)
+    }
+    
+    public static func escape(_ s: String) -> String { return s }
 
-        public func endTable() {
-            string.append("╘═")
-            string.append(contentStack
-                .map{$0.replaceAll("═")}
-                .joined(separator: "═╧═"))
-            string.append("═╛")
-            string.append("\n")
-        }
+    public static func begin(_ table: inout String, index: Int, columns: [Column]) { }
 
-        public func beginHeaderRow() { }
+    public static func end(_ table: inout String, index: Int, columns: [Column]) {
+        table += "╘═"
+        table += columns.map{$0.repeated("═")}.joined(separator: "═╧═")
+        table += "═╛"
+        table += "\n"
+    }
 
-        public func endHeaderRow() {
-            string.append("╒═")
-            string.append(contentStack
-                .map{$0.replaceAll("═")}
-                .joined(separator: "═╤═"))
-            string.append("═╕")
-            string.append("\n")
-            string.append("│ ")
-            string.append(contentStack.joined(separator: " | "))
-            string.append(" │")
-            string.append("\n")
-            contentStack.removeAll()
-        }
+    public static func header(_ table: inout String, index: Int, columns: [Column]) {
+        table += "╒═"
+        table += columns.map{$0.repeated("═")}.joined(separator: "═╤═")
+        table += "═╕"
+        table += "\n"
 
-        public func beginRow() {
-            contentStack.removeAll()
-        }
+        table += "│ "
+        table += columns.map{$0.headerString(for: self)}.joined(separator: " │ ")
+        table += " │"
+        table += "\n"
+    }
 
-        public func endRow() {
-            if row == 0 {
-                string.append("╞═")
-                string.append(contentStack
-                    .map{$0.replaceAll("═")}
-                    .joined(separator: "═╪═"))
-                string.append("═╡")
-                string.append("\n")
-            } else {
-                string.append("├─")
-                string.append(contentStack
-                    .map{$0.replaceAll("─")}
-                    .joined(separator: "─┼─"))
-                string.append("─┤")
-                string.append("\n")
-            }
-            string.append("│ ")
-            string.append(contentStack.joined(separator: " │ "))
-            string.append(" │")
-            string.append("\n")
-            row += 1
+    public static func row(_ table: inout String, index: Int, columns: [Column]) {
+        if index == 0 {
+            table += "╞═"
+            table += columns.map{$0.repeated("═")}.joined(separator: "═╪═")
+            table += "═╡"
+            table += "\n"
+        } else {
+            table += "├─"
+            table += columns.map{$0.repeated("─")}.joined(separator: "─┼─")
+            table += "─┤"
+            table += "\n"
         }
 
-        public func beginHeaderColumn() { }
-        public func endHeaderColumn() { }
-        public func beginColumn() { }
-        public func endColumn() { }
-
-        public func content(_ s: String) {
-            if let width = width {
-                contentStack.append(s.pad(align, length: width))
-            } else {
-                contentStack.append(s)
-            }
-        }
+        table += "│ "
+        table += columns.map{$0.string(for: self)}.joined(separator: " │ ")
+        table += " │"
+        table += "\n"
     }
 }

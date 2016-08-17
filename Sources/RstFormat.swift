@@ -8,66 +8,40 @@
 
 import Foundation
 
-extension Format {
-    public final class Rst: TextTableFormatter {
-        public static var requiresWidth: Bool { return true }
 
-        public var string: String = ""
-        public var width: Int? = nil
-        public var align: Alignment = .left
-
-        private var contentStack: [String] = []
-
-        public static func escape(_ s: String) -> String {
-            return s
+public enum Rst: TextTableStyle {
+    public static func prepare(_ s: String, for column: Column) -> String {
+        var string = s
+        if let width = column.width {
+            string = string.truncated(column.truncate, length: width)
+            string = string.pad(column.align, length: width)
         }
-        
-        public func beginTable() { }
+        return escape(string)
+    }
+    
+    public static func escape(_ s: String) -> String { return s }
 
-        public func endTable() {
-            string.append(contentStack
-                .map{$0.replaceAll("=")}
-                .joined(separator: " "))
-            string.append("\n")
-            contentStack.removeAll()
-        }
+    private static func line(_ table: inout String, columns: [Column]) {
+        table += columns.map{$0.repeated("=")}.joined(separator: " ")
+        table += "\n"
+    }
 
-        public func beginHeaderRow() { }
+    public static func begin(_ table: inout String, index: Int, columns: [Column]) {
+        line(&table, columns: columns)
+    }
 
-        public func endHeaderRow() {
-            string.append(contentStack
-                .map{$0.replaceAll("=")}
-                .joined(separator: " "))
-            string.append("\n")
-            string.append(contentStack.joined(separator: " "))
-            string.append("\n")
-            string.append(contentStack
-                .map{$0.replaceAll("=")}
-                .joined(separator: " "))
-            string.append("\n")
-            contentStack.removeAll()
-        }
+    public static func end(_ table: inout String, index: Int, columns: [Column]) {
+        line(&table, columns: columns)
+    }
 
-        public func beginRow() {
-            contentStack.removeAll()
-        }
+    public static func header(_ table: inout String, index: Int, columns: [Column]) {
+        table += columns.map{$0.headerString(for: self)}.joined(separator: " ")
+        table += "\n"
+        line(&table, columns: columns)
+    }
 
-        public func endRow() {
-            string.append(contentStack.joined(separator: " "))
-            string.append("\n")
-        }
-
-        public func beginHeaderColumn() { }
-        public func endHeaderColumn() { }
-        public func beginColumn() { }
-        public func endColumn() { }
-
-        public func content(_ s: String) {
-            if let width = width {
-                contentStack.append(s.pad(align, length: width))
-            } else {
-                contentStack.append(s)
-            }
-        }
+    public static func row(_ table: inout String, index: Int, columns: [Column]) {
+        table += columns.map{$0.string(for: self)}.joined(separator: " ")
+        table += "\n"
     }
 }
