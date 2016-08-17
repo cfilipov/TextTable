@@ -1,8 +1,9 @@
 # TextTable
 
-[![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat-square)](https://swift.org)
-[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://tldrlegal.com/license/mit-license)
-[![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.4-red.svg?style=flat-square)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
+[![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://tldrlegal.com/license/mit-license)
+[![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.4-red.svg?style=flat)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
+[![Build Status](https://travis-ci.org/cfilipov/TextTable.svg?branch=master)](https://travis-ci.org/cfilipov/TextTable)
 
 Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
 

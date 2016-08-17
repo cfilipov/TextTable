@@ -2,6 +2,8 @@
 
 ## [1.0.0-alpha.4](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
 
+### What's New
+
 * Update for Xcode 8 beta 6 (Apple Swift version 3.0 (swiftlang-800.0.43.6 clang-800.0.38))
 * Travis-CI integration
 
@@ -12,6 +14,8 @@
 ```
 
 ## [1.0.0-alpha.3](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.3)
+
+### What's New
 
 * **This release contains breaking changes to the API**. This should hopefully be the last major breaking change to the API for a long time.
 * `TextTable<T>` construction closure now takes an instance of `T` instead of a `Config<T>`. `Config<T>` has been removed completely. Instead of calling `column(...)` on a `Config<T>` in the closure, you now return an array of `Column` instances. See example transition below for details.
@@ -60,6 +64,8 @@ let table = TextTable<Person> {
 
 ## [1.0.0-alpha.2](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.2)
 
+### What's New
+
 * Column truncation support. There is now an optional `truncate:` argument to `width`.
 * Added some documentation.
 
@@ -75,6 +81,8 @@ let table = TextTable<Person> {
 ```
 
 ## [1.0.0-alpha.1](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.1)
+
+### What's New
 
 * Support for center alignment.
 * If all columns have explicit width, then width calculations are skipped.
@@ -93,6 +101,8 @@ let table = TextTable<Person> {
 ```
 
 ## [1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0)
+
+### What's New
 
 * Breaking change: completely re-written API. No more conforming to a protocol, instead a `TextTable` class is used in a similar way to `NSFormatter`. This offers much more flexibility.
 * Many more output formats. Similar to what you get from Python's [tabulate](https://pypi.python.org/pypi/tabulate) lib.
