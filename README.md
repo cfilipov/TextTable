@@ -1,10 +1,10 @@
 # TextTable
 
-Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
+[![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat-square)](https://swift.org)
+[![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://tldrlegal.com/license/mit-license)
+[![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.3-red.svg?style=flat-square)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.3)
 
-Latest Version   | 
----------------- |
-[1.0.0-alpha.3](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.3) |
+Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
 
 ## Features
 
@@ -192,10 +192,11 @@ Some table styles may include padding to the left and/or right of the content, t
 By default, if a width is specified and the contents of the column are wider than the width, the text will be truncated at the tail (`.tail` truncation mode).
 
 ```Swift
-let table = TextTable<Person> { person in
-	[Column("Name" <- person.name, width: 4), // defaults to truncation: .tail
-	 Column("Age" <- person.age)]
+let table = TextTable<Person> { 
+	[Column("Name" <- $0.name, width: 4), // defaults to truncation: .tail
+	 Column("Age" <- $0.age)]
 }
+
 table.print(data, style: testStyle)
 ```
 ```
@@ -213,10 +214,11 @@ table.print(data, style: testStyle)
 You can also truncate at the head of the text string by specifying `.head` for the `truncation:` argument. If no `width` argument is present, the `truncation` argument has no effect.
 
 ```Swift
-let table = TextTable<Person> { person in
-	[Column("Name" <- person.name, width: 4, truncate: .head),
-	 Column("Age" <- person.age)]
+let table = TextTable<Person> {
+	[Column("Name" <- $0.name, width: 4, truncate: .head),
+	 Column("Age" <- $0.age)]
 }
+
 table.print(data, style: testStyle)
 ```
 ```
@@ -234,10 +236,11 @@ table.print(data, style: testStyle)
 If you prefer to have an fatal error triggered when the contents of a column do not fit the specified width you can specify the `.error` truncation mode.
 
 ```Swift
-let table = TextTable<Person> { person in
-	[Column("Name" <- person.name, width: 4, truncate: .error),
-	 Column("Age" <- person.age)]
+let table = TextTable<Person> {
+	[Column("Name" <- $0.name, width: 4, truncate: .error),
+	 Column("Age" <- $0.age)]
 }
+
 table.print(data, style: testStyle)
 
 // fatal error: Truncation error
@@ -250,7 +253,7 @@ By default, all columns will be left-aligned. You can set the alignment on each 
 ```Swift
 let table = TextTable<Person> {
     [Column("Name" <- $0.name), // default: .left
-     Column("Age" <- $0.age, align: right)]
+     Column("Age" <- $0.age, align: .right)]
 }
 
 table.print(data, style: Style.psql)
