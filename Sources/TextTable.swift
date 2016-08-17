@@ -8,11 +8,7 @@
 
 import Foundation
 
-infix operator <- {
-    associativity left
-    precedence 135
-    assignment
-}
+infix operator <- : AssignmentPrecedence
 
 public func <- (left: String, right: Any) -> (title: String, value: Any) {
     return (left, right)
@@ -94,15 +90,15 @@ public struct Column {
         return width ?? title.characters.count
     }
 
-    private func string(for value: Any) -> String {
-        var string = String(value)
-        if let value = value as? AnyObject, let formatter = formatter {
-            string = formatter.string(for: value) ?? string
-        }
-        return string
-    }
+//    private func string(for value: Any) -> String {
+//        var string = String(describing: value)
+//        if let formatter = formatter {
+//            string = formatter.string(for: value) ?? string
+//        }
+//        return string
+//    }
 
-    private func settingWidth(_ newWidth: Int) -> Column {
+    fileprivate func settingWidth(_ newWidth: Int) -> Column {
         return Column(
             title: self.title,
             value: self.value,
@@ -116,10 +112,10 @@ public struct Column {
 public extension Column {
     func string(for style: TextTableStyle.Type) -> String {
         var string = ""
-        if let value = value as? AnyObject, let formatter = formatter {
+        if let formatter = formatter {
             string = formatter.string(for: value) ?? string
         } else {
-            string = String(value)
+            string = String(describing: value)
         }
         return style.prepare(string, for: self)
     }
@@ -128,8 +124,8 @@ public extension Column {
         return style.prepare(title, for: self)
     }
 
-    func repeated(_ character: Character) -> String {
-        return String(repeating: character, count: resolvedWidth)
+    func repeated(_ string: String) -> String {
+        return String(repeating: string, count: resolvedWidth)
     }
 }
 
@@ -219,7 +215,7 @@ public struct TextTable<T> {
         self.adapter = adapter
     }
 
-    private func calculateWidths<C: Collection where C.Iterator.Element == T>(for data: C, style: TextTableStyle.Type) -> [Int] {
+    private func calculateWidths<C: Collection>(for data: C, style: TextTableStyle.Type) -> [Int] where C.Iterator.Element == T {
         guard let first = data.first else { return [] }
         let headerCols = adapter(first)
         var widths = headerCols.map{$0.width ?? 0}
@@ -251,7 +247,7 @@ public struct TextTable<T> {
      - parameter data: A collection of elements `T` for which this `TextTable` instance has been configured.
      - parameter style: The style of table to be rendered. See `Style` for more options.
      */
-    public func string<C: Collection where C.Iterator.Element == T>(for data: C, style: TextTableStyle.Type = Style.simple) -> String? {
+    public func string<C: Collection>(for data: C, style: TextTableStyle.Type = Style.simple) -> String? where C.Iterator.Element == T {
         guard let first = data.first else { return nil }
         var table = ""
         let cols = adapter(first)
@@ -274,7 +270,7 @@ public struct TextTable<T> {
      - parameter data: A collection of elements `T` for which this `TextTable` instance has been configured.
      - parameter style: The style of table to be rendered. See `Style` for more options.
      */
-    public func print<C: Collection where C.Iterator.Element == T>(_ data: C, style: TextTableStyle.Type = Style.simple) {
+    public func print<C: Collection>(_ data: C, style: TextTableStyle.Type = Style.simple) where C.Iterator.Element == T {
         let table = string(for: data, style: style)!
         Swift.print(table)
     }

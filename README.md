@@ -2,7 +2,7 @@
 
 [![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat-square)](https://swift.org)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://tldrlegal.com/license/mit-license)
-[![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.3-red.svg?style=flat-square)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.3)
+[![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.4-red.svg?style=flat-square)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
 
 Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
 
@@ -21,7 +21,7 @@ Easily print textual tables in Swift. Inspired by the Python [tabulate](https://
 
 This package was written for and tested with the following version of Swift:
 
-> Apple Swift version 3.0 (swiftlang-800.0.41.2 clang-800.0.36)
+> Apple Swift version 3.0 (swiftlang-800.0.43.6 clang-800.0.38)
 
 ## Usage
 
@@ -31,7 +31,7 @@ Use the [Swift Package Manager](https://swift.org/package-manager/) to install `
 dependencies: [
     .Package(
         url: "https://github.com/cfilipov/TextTable",
-        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "3"]))
+        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "4"]))
 ]
 ```
 

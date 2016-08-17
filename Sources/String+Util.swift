@@ -8,10 +8,10 @@
 
 import Foundation
 
-internal typealias PaddingFunction = (length: Int, character: Character) -> String
+internal typealias PaddingFunction = (_ length: Int, _ character: Character) -> String
 
 internal extension String {
-    internal mutating func append(_ c: Character, repeat count: Int) {
+    internal mutating func append(_ c: String, repeat count: Int) {
         append(String(repeating: c, count: count))
     }
 
@@ -52,7 +52,7 @@ internal extension String {
         case .right: padfunc = leftpad
         case .center: padfunc = centerpad
         }
-        return padfunc(length: length, character: " ")
+        return padfunc(length, " ")
     }
 
     internal func truncated(_ mode: Truncation, length: Int) -> String {

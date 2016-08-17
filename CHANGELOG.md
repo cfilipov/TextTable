@@ -1,5 +1,16 @@
 # Change Log
 
+## [1.0.0-alpha.4](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
+
+* Update for Xcode 8 beta 6 (Apple Swift version 3.0 (swiftlang-800.0.43.6 clang-800.0.38))
+* Travis-CI integration
+
+### SPM Dependency Snippet
+
+```Swift
+.Package(url: "https://github.com/cfilipov/TextTable", Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "4"]))
+```
+
 ## [1.0.0-alpha.3](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.3)
 
 * **This release contains breaking changes to the API**. This should hopefully be the last major breaking change to the API for a long time.
@@ -14,12 +25,12 @@
 * `TextTable<T>` and all the internal types are now value types instead of classes.
 * All built-in styles are case-less `enums` so they cannot be accidentally instantiated.
 
-### Known Issues in 1.0.0-alpha.3
+### Known Issues
 
 * Very little effort has but put into performance optimizations. String utilities in particular.
 * It should be possible to create columns without headers, but this hasn't been tested and likely doesn't work yet.
 
-### Transitioning to 1.0.0-alpha.3
+### Transitioning
 
 Before:
 
@@ -41,15 +52,27 @@ let table = TextTable<Person> {
 }
 ```
 
+### SPM Dependency Snippet
+
+```Swift
+.Package(url: "https://github.com/cfilipov/TextTable", Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "3"]))
+```
+
 ## [1.0.0-alpha.2](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.2)
 
 * Column truncation support. There is now an optional `truncate:` argument to `width`.
 * Added some documentation.
 
-### Known Issues in 1.0.0-alpha.2
+### Known Issues
 
 * Very little effort has but put into performance optimizations.
 * It should be possible to create columns without headers, but this hasn't been tested and likely doesn't work yet.
+
+### SPM Dependency Snippet
+
+```Swift
+.Package(url: "https://github.com/cfilipov/TextTable", Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "2"]))
+```
 
 ## [1.0.0-alpha.1](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.1)
 
@@ -58,22 +81,34 @@ let table = TextTable<Person> {
 * Escape strings in certain formats (HTML & Latex, for example).
 * Fixed: `TextTable` config persists calculated column widths. This results in widths getting stuck from the first call to `print` or `string(for:)`.
 
-### Known Issues in 1.0.0-alpha.1
+### Known Issues
 
 * Very little effort has but put into performance optimizations.
 * It should be possible to create columns without headers, but this hasn't been tested and likely doesn't work yet.
+
+### SPM Dependency Snippet
+
+```Swift
+.Package(url: "https://github.com/cfilipov/TextTable", Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "1"]))
+```
 
 ## [1.0.0-alpha.0](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.0)
 
 * Breaking change: completely re-written API. No more conforming to a protocol, instead a `TextTable` class is used in a similar way to `NSFormatter`. This offers much more flexibility.
 * Many more output formats. Similar to what you get from Python's [tabulate](https://pypi.python.org/pypi/tabulate) lib.
 
-### Known Issues in 1.0.0-alpha.0
+### Known Issues
 
 * No attempt at optimizing performance has been made yet. Even when widths are provided, an expensive calculation is still performed.
 * No escaping is being done. None of the formatters even attempt to sanitize the input strings.
 * Center alignment not supported. This will result in a `fatalError()`.
 * It should be possible to create columns without headers, but this hasn't been tested and likely doesn't work yet.
+
+### SPM Dependency Snippet
+
+```Swift
+.Package(url: "https://github.com/cfilipov/TextTable", Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "0"]))
+```
 
 ## [0.0.0](https://github.com/cfilipov/TextTable/releases/tag/v0.0.0)
 

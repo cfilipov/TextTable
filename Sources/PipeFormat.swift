@@ -31,11 +31,11 @@ public enum Pipe: TextTableStyle {
         let w = max(col.width ?? 0, 3)
         switch col.align {
         case .left:
-            return ":" + String(repeating: Character("-"), count: w+1)
+            return ":" + String(repeating: "-", count: w+1)
         case .right:
-            return String(repeating: Character("-"), count: w+1) + ":"
+            return String(repeating: "-", count: w+1) + ":"
         case .center:
-            return ":" + String(repeating: Character("-"), count: w) + ":"
+            return ":" + String(repeating: "-", count: w) + ":"
         }
     }
 
