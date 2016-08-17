@@ -12,22 +12,6 @@ os:
 
 osx_image: xcode8
 
-env:
-  - TOOLCHAIN="swift-DEVELOPMENT-SNAPSHOT-2016-02-08-a"
-  
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        brew update;
-    fi
-
-install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
-        wget https://swift.org/builds/development/xcode/${TOOLCHAIN}/${TOOLCHAIN}-osx.pkg;
-        pkgutil --expand ${TRAVIS_BUILD_DIR}/${TOOLCHAIN}-osx.pkg ${TRAVIS_BUILD_DIR}/${TOOLCHAIN}-osx.unpkg;
-        cat ${TRAVIS_BUILD_DIR}/${TOOLCHAIN}-osx.unpkg/${TOOLCHAIN}-osx-package.pkg/Payload | gunzip -dc |cpio -i;
-        export PATH=${TRAVIS_BUILD_DIR}/usr/bin:"${PATH}";
-    fi
-
 script:
   - swift build
   - swift test
