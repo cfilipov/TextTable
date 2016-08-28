@@ -7,6 +7,10 @@
 
 Easily print textual tables in Swift. Inspired by the Python [tabulate](https://pypi.python.org/pypi/tabulate) library.
 
+## Upcoming Changes
+
+See [details on an upcoming change.](https://github.com/cfilipov/TextTable/issues/1)
+
 ## Features
 
 * Easily generate textual tables from collections of any type
