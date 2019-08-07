@@ -87,7 +87,7 @@ public struct Column {
     }
 
     internal var resolvedWidth: Int {
-        return width ?? title.characters.count
+        return width ?? title.count
     }
 
 //    private func string(for value: Any) -> String {
@@ -211,7 +211,7 @@ public struct TextTable<T> {
     /**
      Creates an instance of `TextTable` which is used to format strings of tables. This instance represents the mapping of a type `T` to its corresponding columns. An instance can be re-used (and should be re-used unless you need to change the mapping or column configuration).
      */
-    public init(_ adapter: Adapter) {
+    public init(_ adapter: @escaping Adapter) {
         self.adapter = adapter
     }
 
@@ -224,7 +224,7 @@ public struct TextTable<T> {
                 widths[index] = w
             } else {
                 let text = column.headerString(for: style)
-                widths[index] = max(text.characters.count, widths[index])
+                widths[index] = max(text.count, widths[index])
             }
         }
         for element in data {
@@ -234,7 +234,7 @@ public struct TextTable<T> {
                     widths[index] = w
                 } else {
                     let text = column.string(for: style)
-                    widths[index] = max(text.characters.count, widths[index])
+                    widths[index] = max(text.count, widths[index])
                 }
             }
         }
@@ -251,7 +251,7 @@ public struct TextTable<T> {
         guard let first = data.first else { return nil }
         var table = ""
         let cols = adapter(first)
-        var widths = cols.flatMap{$0.width}
+        var widths = cols.compactMap{$0.width}
         if widths.count < cols.count {
             widths = calculateWidths(for: data, style: style)
         }
