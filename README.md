@@ -1,6 +1,6 @@
 # TextTable
 
-[![Swift 3.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org)
+[![Swift 5.0](https://img.shields.io/badge/Swift-3.0-orange.svg?style=flat)](https://swift.org)
 [![License MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](https://tldrlegal.com/license/mit-license)
 [![License MIT](https://img.shields.io/badge/SPM-1.0.0--alpha.4-red.svg?style=flat)](https://github.com/cfilipov/TextTable/releases/tag/v1.0.0-alpha.4)
 [![Build Status](https://travis-ci.org/cfilipov/TextTable.svg?branch=master)](https://travis-ci.org/cfilipov/TextTable)
@@ -173,7 +173,7 @@ let table = TextTable<Person> {
     [Column("Name" <- $0.name, width: 10),
      Column("Age" <- $0.age, width: 10)]
 }
-	
+
 table.print(data, style: Style.psql)
 ```
 ```
@@ -186,7 +186,7 @@ table.print(data, style: Style.psql)
 +------------+------------+
 ```
 
-#### Note on Padding 
+#### Note on Padding
 
 Some table styles may include padding to the left and/or right of the content, the width argument does not effect include this padding.
 
@@ -197,7 +197,7 @@ Some table styles may include padding to the left and/or right of the content, t
 By default, if a width is specified and the contents of the column are wider than the width, the text will be truncated at the tail (`.tail` truncation mode).
 
 ```Swift
-let table = TextTable<Person> { 
+let table = TextTable<Person> {
 	[Column("Name" <- $0.name, width: 4), // defaults to truncation: .tail
 	 Column("Age" <- $0.age)]
 }
@@ -282,14 +282,14 @@ In the example below `table1` will incur the overhead of the width calculation b
 ```Swift
 // This will still result in extra calculations
 let table1 = TextTable<Person> {
-    [Column("Name" <- $0.name), 
+    [Column("Name" <- $0.name),
      Column("Age" <- $0.age, width: 10)]
 }
 ```
 ```Swift
 // This will skip the width calculations
 let table2 = TextTable<Person> {
-    [Column("Name" <- $0.name, width: 9), 
+    [Column("Name" <- $0.name, width: 9),
      Column("Age" <- $0.age, width: 10)]
 }
 ```
