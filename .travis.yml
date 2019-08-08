@@ -1,4 +1,4 @@
-language: objective-c
+language: swift
 
 branches:
  only:
@@ -10,7 +10,7 @@ compiler:
 os:
   - osx
 
-osx_image: xcode8
+osx_image: xcode10.2
 
 script:
   - swift build
