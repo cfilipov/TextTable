@@ -26,7 +26,7 @@ See [details on an upcoming change.](https://github.com/cfilipov/TextTable/issue
 
 This package was written for and tested with the following version of Swift:
 
-> Apple Swift version 3.0 (swiftlang-800.0.43.6 clang-800.0.38)
+> Apple Swift version 5.0
 
 ## Usage
 
@@ -34,9 +34,9 @@ Use the [Swift Package Manager](https://swift.org/package-manager/) to install `
 
 ```Swift
 dependencies: [
-    .Package(
+    .package(
         url: "https://github.com/cfilipov/TextTable",
-        Version(1, 0, 0, prereleaseIdentifiers: ["alpha", "4"]))
+        .branch("master"))
 ]
 ```
 
