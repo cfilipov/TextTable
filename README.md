@@ -52,7 +52,7 @@ Throughout the examples, the following data structure will be used:
 struct Person {
     let name: String
     let age: Int
-    let birhtday: Date
+    let birthday: Date
 }
 ```
 
@@ -60,9 +60,9 @@ Let's say we have a collection of `Person` we wish to display as a table.
 
 ```Swift
 let data = [
-	Person(name: "Alice", age: 42, birhtday: Date()),
-	Person(name: "Bob", age: 22, birhtday: Date()),
-	Person(name: "Eve", age: 142, birhtday: Date())
+	Person(name: "Alice", age: 42, birthday: Date()),
+	Person(name: "Bob", age: 22, birthday: Date()),
+	Person(name: "Eve", age: 142, birthday: Date())
 ]
 ```
 
@@ -74,7 +74,7 @@ Configure a `TextTable` instance for the type you wish to print as a table. The 
 let table = TextTable<Person> {
     [Column("Name" <- $0.name),
      Column("Age" <- $0.age),
-     Column("Birthday" <- $0.birhtday)]
+     Column("Birthday" <- $0.birthday)]
 }
 ```
 
@@ -86,7 +86,7 @@ The `<-` operator is just syntactic sugar. If you don't want to use the operator
 let table = TextTable<Person> {
     [Column(title: "Name", value: $0.name),
      Column(title: "Age", value: $0.age),
-     Column(title: "Birthday", value: $0.birhtday)]
+     Column(title: "Birthday", value: $0.birthday)]
 }
 ```
 
@@ -149,7 +149,7 @@ dateFormatter.dateStyle = .medium
 let table = TextTable<Person> {
     [Column("Name" <- $0.name),
      Column("Age" <- $0.age),
-     Column("Birthday" <- $0.birhtday, formatter: df)]
+     Column("Birthday" <- $0.birthday, formatter: df)]
 }
 
 table.print(data, style: Style.psql)
