@@ -271,7 +271,8 @@ public struct TextTable<T> {
      - parameter style: The style of table to be rendered. See `Style` for more options.
      */
     public func print<C: Collection>(_ data: C, style: TextTableStyle.Type = Style.simple) where C.Iterator.Element == T {
-        let table = string(for: data, style: style)!
-        Swift.print(table)
+        if let table = string(for: data, style: style) {
+            Swift.print(table)
+        }
     }
 }
